@@ -33,13 +33,13 @@ class TransferOperation
 
   def validate_money_in_source_account
     if source_account.balance < amount
-      raise ActiveRecord::RecordNotSaved, 'non-sufficient funds'
+      raise ActiveRecord::RecordNotSaved, 'Non-sufficient funds'
     end
   end
 
   def validate_amount_currency_format
     if CURRENCY_FORMAT_REGEX.match(amount_string).nil?
-      raise ActiveRecord::RecordNotSaved, 'invalid currency format'
+      raise ActiveRecord::RecordNotSaved, 'Invalid currency format'
     end
   end
 
