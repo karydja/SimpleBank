@@ -1,0 +1,1 @@
+class InvalidRequestAcceptError < StandardError; end
