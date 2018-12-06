@@ -73,4 +73,12 @@ RSpec.describe TransferOperation do
       expect { subject.operate }.to raise_error(ActiveRecord::RecordNotSaved)
     end
   end
+
+  context 'when source and destination accounts are the same' do
+    let(:destination_account_id) { source_account.id }
+
+    it 'raises an error' do
+      expect { subject.operate }.to raise_error(ActiveRecord::RecordNotSaved)
+    end
+  end
 end

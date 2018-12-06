@@ -267,4 +267,49 @@ RSpec.describe 'money transfer', type: :request do
       expect(response.body).to eq(expected_response)
     end
   end
+
+  context 'when source and destination accounts are the same' do
+    let(:params_with_same_source_and_destination_accounts) do
+      transfer_params.merge({ destination_account_id: source_account.id })
+    end
+
+    it 'does not create a Transfer' do expect do
+        post '/v1/transfers', params: { transfer: params_with_same_source_and_destination_accounts }
+      end.not_to change{ Transfer.count }
+    end
+
+    it 'returns a 422 status' do
+      post '/v1/transfers', params: { transfer: params_with_same_source_and_destination_accounts }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it 'returns an application/json content-type' do
+      post '/v1/transfers', params: { transfer: params_with_same_source_and_destination_accounts }
+
+      expect(response.content_type).to eq('application/json')
+    end
+
+    it 'returns a valid JSON' do
+      post '/v1/transfers', params: { transfer: params_with_same_source_and_destination_accounts }
+
+      expect { (JSON.parse(response.body)) }.not_to raise_error
+    end
+
+    it 'returns a JSON error in the expected format' do
+      post '/v1/transfers', params: { transfer: params_with_same_source_and_destination_accounts }
+
+      expected_response = {
+        errors: [
+          {
+            status: '422',
+            title: 'RecordNotSaved',
+            detail: 'Accounts must be different'
+          }
+        ]
+      }.to_json
+
+      expect(response.body).to eq(expected_response)
+    end
+  end
 end

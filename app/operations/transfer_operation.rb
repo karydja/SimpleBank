@@ -11,8 +11,9 @@ class TransferOperation
   end
 
   def operate
-    validate_money_in_source_account
+    validate_enough_funds_in_source_account
     validate_amount_currency_format
+    validate_different_accounts
 
     Transfer.transaction do
       debit_on_source_account
@@ -31,7 +32,7 @@ class TransferOperation
     )
   end
 
-  def validate_money_in_source_account
+  def validate_enough_funds_in_source_account
     if source_account.balance < amount
       raise ActiveRecord::RecordNotSaved, 'Non-sufficient funds'
     end
@@ -40,6 +41,12 @@ class TransferOperation
   def validate_amount_currency_format
     if CURRENCY_FORMAT_REGEX.match(amount_string).nil?
       raise ActiveRecord::RecordNotSaved, 'Invalid currency format'
+    end
+  end
+
+  def validate_different_accounts
+    if source_account.id == destination_account.id
+      raise ActiveRecord::RecordNotSaved, 'Accounts must be different'
     end
   end
 
