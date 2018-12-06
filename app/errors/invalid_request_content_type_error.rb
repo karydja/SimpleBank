@@ -1,0 +1,1 @@
+class InvalidRequestContentTypeError < StandardError; end

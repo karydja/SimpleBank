@@ -12,30 +12,36 @@ RSpec.describe 'money transfer', type: :request do
   end
 
   context 'with valid params' do
+    def post_transfer
+      post '/v1/transfers',
+        params: { transfer: transfer_params }.to_json,
+        headers: { 'Content-Type' => 'application/vnd.api+json' }
+    end
+
     it 'creates a Transfer' do
-      expect { post '/v1/transfers', params: { transfer: transfer_params } }.to change{ Transfer.count }.by(1)
+      expect { post_transfer }.to change{ Transfer.count }.by(1)
     end
 
     it 'returns a 201 status' do
-      post '/v1/transfers', params: { transfer: transfer_params }
+      post_transfer
 
       expect(response).to have_http_status(:created)
     end
 
-    it 'returns an application/json content-type' do
-      post '/v1/transfers', params: { transfer: transfer_params }
+    it 'returns an application/vnd.api+json content-type' do
+      post_transfer
 
-      expect(response.content_type).to eq('application/json')
+      expect(response.content_type).to eq('application/vnd.api+json')
     end
 
     it 'returns a valid JSON' do
-      post '/v1/transfers', params: { transfer: transfer_params }
+      post_transfer
 
       expect { (JSON.parse(response.body)) }.not_to raise_error
     end
 
     it 'returns a JSON in the expected format' do
-      post '/v1/transfers', params: { transfer: transfer_params }
+      post_transfer
 
       transfer = Transfer.last
       transfer_destination_account = Account.find(destination_account.id)
@@ -83,6 +89,12 @@ RSpec.describe 'money transfer', type: :request do
   end
 
   context 'with invalid params' do
+    def post_transfer(transfer_params)
+      post '/v1/transfers',
+        params: { transfer: transfer_params }.to_json,
+        headers: { 'Content-Type' => 'application/vnd.api+json' }
+    end
+
     context 'source_account_id' do
       let(:source_account_id) { 0 }
       let(:params_with_invalid_source_acount_id) do
@@ -90,31 +102,30 @@ RSpec.describe 'money transfer', type: :request do
       end
 
       it 'does not create a Transfer' do
-        expect do
-          post '/v1/transfers', params: { transfer: params_with_invalid_source_acount_id }
-        end.not_to change{ Transfer.count }
+        expect { post_transfer(params_with_invalid_source_acount_id) }
+          .not_to change{ Transfer.count }
       end
 
       it 'returns a 404 status' do
-        post '/v1/transfers', params: { transfer: params_with_invalid_source_acount_id }
+        post_transfer(params_with_invalid_source_acount_id)
 
         expect(response).to have_http_status(:not_found)
       end
 
-      it 'returns an application/json content-type' do
-        post '/v1/transfers', params: { transfer: params_with_invalid_source_acount_id }
+      it 'returns an application/vnd.api+json content-type' do
+        post_transfer(params_with_invalid_source_acount_id)
 
-        expect(response.content_type).to eq('application/json')
+        expect(response.content_type).to eq('application/vnd.api+json')
       end
 
       it 'returns a valid JSON' do
-        post '/v1/transfers', params: { transfer: params_with_invalid_source_acount_id }
+        post_transfer(params_with_invalid_source_acount_id)
 
         expect { (JSON.parse(response.body)) }.not_to raise_error
       end
 
       it 'returns a JSON error in the expected format' do
-        post '/v1/transfers', params: { transfer: params_with_invalid_source_acount_id }
+        post_transfer(params_with_invalid_source_acount_id)
 
         expected_response = {
           errors: [
@@ -137,31 +148,30 @@ RSpec.describe 'money transfer', type: :request do
       end
 
       it 'does not create a Transfer' do
-        expect do
-          post '/v1/transfers', params: { transfer: params_with_invalid_destination_account_id }
-        end.not_to change{ Transfer.count }
+        expect { post_transfer(params_with_invalid_destination_account_id) }
+          .not_to change{ Transfer.count }
       end
 
       it 'returns a 404 status' do
-        post '/v1/transfers', params: { transfer: params_with_invalid_destination_account_id }
+        post_transfer(params_with_invalid_destination_account_id)
 
         expect(response).to have_http_status(:not_found)
       end
 
-      it 'returns an application/json content-type' do
-        post '/v1/transfers', params: { transfer: params_with_invalid_destination_account_id }
+      it 'returns an application/vnd.api+json content-type' do
+        post_transfer(params_with_invalid_destination_account_id)
 
-        expect(response.content_type).to eq('application/json')
+        expect(response.content_type).to eq('application/vnd.api+json')
       end
 
       it 'returns a valid JSON' do
-        post '/v1/transfers', params: { transfer: params_with_invalid_destination_account_id }
+        post_transfer(params_with_invalid_destination_account_id)
 
         expect { (JSON.parse(response.body)) }.not_to raise_error
       end
 
       it 'returns a JSON error in the expected format' do
-        post '/v1/transfers', params: { transfer: params_with_invalid_destination_account_id }
+        post_transfer(params_with_invalid_destination_account_id)
 
         expected_response = {
           errors: [
@@ -182,31 +192,31 @@ RSpec.describe 'money transfer', type: :request do
         transfer_params.merge({ amount: 10.123 })
       end
 
-      it 'does not create a Transfer' do expect do
-          post '/v1/transfers', params: { transfer: params_with_invalid_amount_format }
-        end.not_to change{ Transfer.count }
+      it 'does not create a Transfer' do
+        expect { post_transfer(params_with_invalid_amount_format) }
+          .not_to change{ Transfer.count }
       end
 
       it 'returns a 422 status' do
-        post '/v1/transfers', params: { transfer: params_with_invalid_amount_format }
+        post_transfer(params_with_invalid_amount_format)
 
         expect(response).to have_http_status(:unprocessable_entity)
       end
 
-      it 'returns an application/json content-type' do
-        post '/v1/transfers', params: { transfer: params_with_invalid_amount_format }
+      it 'returns an application/vnd.api+json content-type' do
+        post_transfer(params_with_invalid_amount_format)
 
-        expect(response.content_type).to eq('application/json')
+        expect(response.content_type).to eq('application/vnd.api+json')
       end
 
       it 'returns a valid JSON' do
-        post '/v1/transfers', params: { transfer: params_with_invalid_amount_format }
+        post_transfer(params_with_invalid_amount_format)
 
         expect { (JSON.parse(response.body)) }.not_to raise_error
       end
 
       it 'returns a JSON error in the expected format' do
-        post '/v1/transfers', params: { transfer: params_with_invalid_amount_format }
+        post_transfer(params_with_invalid_amount_format)
 
         expected_response = {
           errors: [
@@ -228,31 +238,36 @@ RSpec.describe 'money transfer', type: :request do
       transfer_params.merge({ amount: source_account.balance + 100.00 })
     end
 
-    it 'does not create a Transfer' do expect do
-        post '/v1/transfers', params: { transfer: params_with_source_account_with_insufficient_funds }
-      end.not_to change{ Transfer.count }
+    def post_transfer
+      post '/v1/transfers',
+        params: { transfer: params_with_source_account_with_insufficient_funds }.to_json,
+        headers: { 'Content-Type' => 'application/vnd.api+json' }
+    end
+
+    it 'does not create a Transfer' do
+      expect { post_transfer }.not_to change{ Transfer.count }
     end
 
     it 'returns a 422 status' do
-      post '/v1/transfers', params: { transfer: params_with_source_account_with_insufficient_funds }
+      post_transfer
 
       expect(response).to have_http_status(:unprocessable_entity)
     end
 
-    it 'returns an application/json content-type' do
-      post '/v1/transfers', params: { transfer: params_with_source_account_with_insufficient_funds }
+    it 'returns an application/vnd.api+json content-type' do
+      post_transfer
 
-      expect(response.content_type).to eq('application/json')
+      expect(response.content_type).to eq('application/vnd.api+json')
     end
 
     it 'returns a valid JSON' do
-      post '/v1/transfers', params: { transfer: params_with_source_account_with_insufficient_funds }
+      post_transfer
 
       expect { (JSON.parse(response.body)) }.not_to raise_error
     end
 
     it 'returns a JSON error in the expected format' do
-      post '/v1/transfers', params: { transfer: params_with_source_account_with_insufficient_funds }
+      post_transfer
 
       expected_response = {
         errors: [
@@ -273,31 +288,36 @@ RSpec.describe 'money transfer', type: :request do
       transfer_params.merge({ destination_account_id: source_account.id })
     end
 
-    it 'does not create a Transfer' do expect do
-        post '/v1/transfers', params: { transfer: params_with_same_source_and_destination_accounts }
-      end.not_to change{ Transfer.count }
+    def post_transfer
+      post '/v1/transfers',
+        params: { transfer: params_with_same_source_and_destination_accounts }.to_json,
+        headers: { 'Content-Type' => 'application/vnd.api+json' }
+    end
+
+    it 'does not create a Transfer' do
+      expect { post_transfer }.not_to change{ Transfer.count }
     end
 
     it 'returns a 422 status' do
-      post '/v1/transfers', params: { transfer: params_with_same_source_and_destination_accounts }
+      post_transfer
 
       expect(response).to have_http_status(:unprocessable_entity)
     end
 
-    it 'returns an application/json content-type' do
-      post '/v1/transfers', params: { transfer: params_with_same_source_and_destination_accounts }
+    it 'returns an application/vnd.api+json content-type' do
+      post_transfer
 
-      expect(response.content_type).to eq('application/json')
+      expect(response.content_type).to eq('application/vnd.api+json')
     end
 
     it 'returns a valid JSON' do
-      post '/v1/transfers', params: { transfer: params_with_same_source_and_destination_accounts }
+      post_transfer
 
       expect { (JSON.parse(response.body)) }.not_to raise_error
     end
 
     it 'returns a JSON error in the expected format' do
-      post '/v1/transfers', params: { transfer: params_with_same_source_and_destination_accounts }
+      post_transfer
 
       expected_response = {
         errors: [
