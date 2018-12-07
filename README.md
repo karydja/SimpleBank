@@ -1,24 +1,49 @@
-# README
+# SimpleBank
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+*Do you ever feel like breaking down?*
+*Do you ever feel out of money?*
+*Like somehow you're just bankrupt*
+*And no one wants to lend you*
+*(...)*
+*Welcome to my account!*
 
-Things you may want to cover:
+![Alt Text](https://media.giphy.com/media/mwEM69M5NInxm/giphy.gif)
 
-* Ruby version
+**SimpleBank** is an [API-only Rails application](https://guides.rubyonrails.org/api_app.html) for bank operations (at the moment, we have money transfer and account info checking).
 
-* System dependencies
+## Getting started
 
-* Configuration
+### Prerequisites
+This projects needs [Ruby](https://www.ruby-lang.org/en/downloads/) 2.5.3 and [PostgreSQL](https://www.postgresql.org) 10.3+.
 
-* Database creation
+### Setup
+**SimpleBank** setup is pretty straightforward, you'll see.
+Clone the repository and go to the project folder
+```
+$ git clone https://github.com/karydja/SimpleBank.git
+$ cd SimpleBank
+```
+Now the magic happens! Just run
+```
+$ ./bin/setup
+```
+and follow the instructions accordingly, and then you'll be ready to go.
 
-* Database initialization
+## Running the application
+Make sure you have PostgreSQL running and the setup step was completed.  After that, you just need to run
+```
+$ rails server
+```
+and the the application will be available in `localhost:3000`.
 
-* How to run the test suite
+## Running the tests
+Here you also need PostgreSQL and a successful setup. The project uses [RSpec](https://github.com/rspec/rspec-rails) to build its specs, so you can run the test suite using
+```
+$ bundle exec rspec
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+## Contributing
+Feel free to open Pull Requests and contact me via issue or email :)
 
-* Deployment instructions
-
-* ...
+## License
+This project is under the MIT License - see the LICENSE.md file for more details.
