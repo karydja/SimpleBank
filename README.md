@@ -1,10 +1,10 @@
 # SimpleBank
 
-*Do you ever feel like breaking down?*
-*Do you ever feel out of money?*
-*Like somehow you're just bankrupt*
-*And no one wants to lend you*
-*(...)*
+*Do you ever feel like breaking down?*\
+*Do you ever feel out of money?*\
+*Like somehow you're just bankrupt*\
+*And no one wants to lend you*\
+*(...)*\
 *Welcome to my account!*
 
 ![Alt Text](https://media.giphy.com/media/mwEM69M5NInxm/giphy.gif)
@@ -17,7 +17,7 @@
 This projects needs [Ruby](https://www.ruby-lang.org/en/downloads/) 2.5.3 and [PostgreSQL](https://www.postgresql.org) 10.3+.
 
 ### Setup
-**SimpleBank** setup is pretty straightforward, you'll see.
+**SimpleBank** setup is pretty straightforward, you'll see.\
 Clone the repository and go to the project folder
 ```
 $ git clone https://github.com/karydja/SimpleBank.git
@@ -49,4 +49,4 @@ $ bundle exec rspec
 Feel free to open Pull Requests and contact me via issue or email :)
 
 ## License
-This project is under the MIT License - see the LICENSE.md file for more details.
+This project is under the MIT License - see the [LICENSE.md](LICENSE.md) file for more details.
