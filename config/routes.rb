@@ -4,4 +4,6 @@ Rails.application.routes.draw do
     resources :accounts, only: :show
     resources :transfers, only: :create
   end
+
+  mount SwaggerUiEngine::Engine, at: '/'
 end

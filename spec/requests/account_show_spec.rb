@@ -2,11 +2,10 @@ require 'rails_helper'
 
 RSpec.describe 'account show', type: :request do
   before do
-    get "/v1/accounts/#{account_id}",
-      headers: { 'Content-Type' => 'application/vnd.api+json' }
+    get "/v1/accounts/#{account_id}"
   end
 
-  context 'with valid headers and params' do
+  context 'with valid params' do
     let(:account) { create(:account) }
     let(:account_id) { account.id }
 
