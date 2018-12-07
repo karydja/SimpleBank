@@ -1,0 +1,204 @@
+swagger: "2.0"
+info:
+  description: A simple bank API.
+  version: 1.0.0
+  title: SimpleBank
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: karydjasouza@outlook.com
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+basePath: /v1
+schemes:
+- https
+- http
+paths:
+  /transfers:
+    post:
+      tags:
+      - Transfer
+      summary: Create a transfer
+      operationId: createUser
+      consumes:
+      - application/vnd.api+json
+      produces:
+      - application/vnd.api+json
+      parameters:
+      - in: body
+        name: transfer
+        description: The transfer to be created
+        required: true
+        schema:
+          properties:
+            transfer:
+              properties:
+                source_account_id:
+                  type: string
+                destination_account_id:
+                  type: string
+                amount:
+                  type: string
+      responses:
+        201:
+          schema:
+            $ref: "#/definitions/TransferSuccesfulResponse"
+          description: a transfer was created successfully and returned
+        404:
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+          description: account not found
+        422:
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+          description: validation error
+  /accounts/{id}:
+    get:
+      tags:
+      - Account
+      summary: Get an Account info
+      operationId: getAccount
+      produces:
+      - application/vnd.api+json
+      parameters:
+      - in: path
+        name: id
+        description: The ID of the Account to be returned
+        required: true
+        type: integer
+      responses:
+        201:
+          schema:
+            $ref: "#/definitions/AccountSuccesfulResponse"
+          description: account successfully returned
+        404:
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+          description: account not found
+definitions:
+  Account:
+    type: object
+    properties:
+      data:
+        description: The top-level field as described by JSON:API specification
+        properties:
+          id:
+            type: integer
+            format: int64
+            description: ID of the resource
+          type:
+            type: string
+            description: Type of the resource. The value will always be 'Account'
+          attributes:
+            properties:
+              name:
+                type: string
+                description: Name of the account's owner
+              balance:
+                type: string
+                description: Total of money in the account at the moment
+  Transfer:
+    type: object
+    properties:
+      data:
+        description: The top-level field as described by JSON:API specification
+        properties:
+          id:
+            type: integer
+            format: int64
+            description: ID of the resource
+          type:
+            type: string
+            description: Type of the resource. The value will always be 'Transfer'
+          attributes:
+            properties:
+              amount:
+                type: string
+                description: Money amount to be transfered
+              sourceAccountId:
+                type: string
+                description: ID of the account where the money is from
+              destinationAccountId:
+                type: string
+                description: ID of the account where the money goes to
+              createdAt:
+                type: string
+                description: Date and time of the transfer creation
+              updatedAt:
+                type: string
+                description: Date and time of the last transfer data update
+          relationships:
+            properties:
+              sourceAccount:
+                properties:
+                  data:
+                    description: The top-level field as described by JSON:API specification
+                    properties:
+                      id:
+                        type: integer
+                        format: int64
+                        description: ID of the resource
+                      type:
+                        type: string
+                        description: Type of the resource. The value will always be 'Account'
+                      attributes:
+                        properties:
+                          name:
+                            type: string
+                            description: Name of the source account's owner
+                          createdAt:
+                            type: string
+                            description: Date and time of the account creation
+                          updatedAt:
+                            type: string
+                            description: Date and time of the last account data update
+              destinationAccount:
+                properties:
+                  data:
+                    description: The top-level field as described by JSON:API specification
+                    properties:
+                      id:
+                        type: integer
+                        format: int64
+                        description: ID of the resource
+                      type:
+                        type: string
+                        description: Type of the resource. The value will always be 'Account'
+                      attributes:
+                        properties:
+                          name:
+                            type: string
+                            description: Name of the destination account's owner
+                          createdAt:
+                            type: string
+                            description: Date and time of the account creation
+                          updatedAt:
+                            type: string
+                            description: Date and time of the last account data update
+  AccountSuccesfulResponse:
+    $ref: "#/definitions/Account"
+  TransferSuccesfulResponse:
+    $ref: "#/definitions/Transfer"
+  Error:
+    type: object
+    properties:
+      status:
+        type: string
+        description: HTTP status code applicable to the error
+      title:
+        type: string
+        description: A short, human-readable summary of the error
+      detail:
+        type: string
+        description: A human-readable description specific to the occurrence of the error
+  ErrorResponse:
+    type: object
+    properties:
+      errors:
+        type: array
+        description: A list of errors
+        items:
+          $ref: "#/definitions/Error"
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io

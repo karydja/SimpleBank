@@ -21,6 +21,12 @@ class V1::BaseController < ApplicationController
   end
 
   def check_request_content_type
+    # The JSON:API spec states that the Content-Type is mandatory only when
+    # JSON:API data is being sent, so with an empty request body there's no
+    # need to check the Content-Type
+    # See also https://github.com/emberjs/data/issues/4226#issuecomment-194531920
+    return if request.body.size.zero?
+
     if request.headers['Content-Type'] != 'application/vnd.api+json'
       raise ::InvalidRequestContentTypeError, 'Clients MUST send all JSON:API ' \
         'data in request documents with the header Content-Type: ' \
@@ -33,7 +39,7 @@ class V1::BaseController < ApplicationController
 
     request_accepts = request.headers['Accept'].split(',')
 
-    # Checking if there is a JSON API mime type without media type parameters,
+    # Checking if there is a JSON:API mime type without media type parameters,
     # as mandated by the spec
     unless request_accepts.any? { |type| type.strip == 'application/vnd.api+json' }
       raise ::InvalidRequestAcceptError, 'Clients that include the JSON:API ' \

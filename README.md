@@ -36,6 +36,9 @@ $ rails server
 ```
 and the the application will be available in `localhost:3000`.
 
+## Documentation
+Once you access `localhost:3000` you'll be redirected to a Swagger UI loaded with the API documentation.
+
 ## Running the tests
 Here you also need PostgreSQL and a successful setup. The project uses [RSpec](https://github.com/rspec/rspec-rails) to build its specs, so you can run the test suite using
 ```
